@@ -1,24 +1,24 @@
 package main
 
 import (
+	"../nsq_thrift"
+	"./gen-go/service"
 	"git.apache.org/thrift.git/lib/go/thrift"
-  "./gen-go/service"
-  "../nsq_thrift"
-  "log"
+	"log"
 )
 
 func main() {
-  trans, err := nsq_thrift.NewTNSQClient("localhost:4150", "foo")
+	trans, err := nsq_thrift.NewTNSQClient("localhost:4150", "foo")
 
-  if err != nil {
-    panic("Invalid client")
-  }
+	if err != nil {
+		panic("Invalid client")
+	}
 
-  defer trans.Close()
+	defer trans.Close()
 
-  var protocolFactory thrift.TProtocolFactory
+	var protocolFactory thrift.TProtocolFactory
 	protocolFactory = thrift.NewTJSONProtocolFactory()
 	client := service.NewTestClientFactory(trans, protocolFactory)
-  log.Println("Message sent: buz")
+	log.Println("Message sent: buz")
 	client.Foo("buz")
 }

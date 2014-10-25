@@ -4,33 +4,33 @@
 package main
 
 import (
+	"../nsq_thrift"
+	"./gen-go/service"
 	"git.apache.org/thrift.git/lib/go/thrift"
-  "./gen-go/service"
-  "../nsq_thrift"
-  "log"
+	"log"
 )
 
 type TestImpl struct {
- foo string
+	foo string
 }
 
 func (t *TestImpl) Foo(bar string) error {
-  log.Println("Message received:", bar)
-  return nil
+	log.Println("Message received:", bar)
+	return nil
 }
 
 func main() {
-  nsq_server, err := nsq_thrift.NewTServerNSQ("foo", "bar", nsq_thrift.NSQD, "127.0.0.1:4150")
+	nsq_server, err := nsq_thrift.NewTServerNSQ("foo", "bar", nsq_thrift.NSQD, "127.0.0.1:4150")
 
-  if err != nil {
-    println(err)
-  }
+	if err != nil {
+		println(err)
+	}
 
-  server := thrift.NewTSimpleServer4(
-    service.NewTestProcessor(&TestImpl{}),
-    nsq_server,
-    thrift.NewTTransportFactory(),
-    thrift.NewTJSONProtocolFactory(),
-  )
-  server.Serve()
+	server := thrift.NewTSimpleServer4(
+		service.NewTestProcessor(&TestImpl{}),
+		nsq_server,
+		thrift.NewTTransportFactory(),
+		thrift.NewTJSONProtocolFactory(),
+	)
+	server.Serve()
 }
